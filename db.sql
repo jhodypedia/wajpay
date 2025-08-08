@@ -1,0 +1,23 @@
+CREATE DATABASE IF NOT EXISTS wa_bot CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE wa_bot;
+
+CREATE TABLE IF NOT EXISTS sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  session_id VARCHAR(150) NOT NULL UNIQUE,
+  user_id VARCHAR(150) DEFAULT NULL,
+  phone_number VARCHAR(50) DEFAULT NULL,
+  status ENUM('loading','qr_received','connected','disconnected','logged_out') DEFAULT 'loading',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  session_id VARCHAR(150) DEFAULT NULL,
+  direction ENUM('in','out') NOT NULL,
+  from_who VARCHAR(150) DEFAULT NULL,
+  to_who VARCHAR(150) DEFAULT NULL,
+  text TEXT,
+  media_type VARCHAR(50) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
