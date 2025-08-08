@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WA Bot — Dashboard</title>
+
+  <!-- Bootstrap & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Toastr -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+  <!-- Custom -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-dark text-light">
+
+  <!-- Topbar -->
+  <nav class="navbar topbar navbar-expand-lg">
+    <div class="container-fluid">
+      <div class="d-flex align-items-center gap-3">
+        <div class="brand">WA MultiSession</div>
+        <small class="muted">Admin Dashboard</small>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+        <div id="connectedCount" class="me-3 muted">Sessions: 0</div>
+        <button id="btnListSessions" class="btn btn-outline-light btn-sm me-2"><i class="fa fa-list"></i></button>
+        <button id="btnLogoutAll" class="btn btn-danger btn-sm"><i class="fa fa-power-off"></i> Logout All</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid mt-3">
+    <div class="row g-3">
+      <!-- Sidebar controls -->
+      <aside class="col-lg-3">
+        <div class="card card-glass p-3 mb-3">
+          <h6>Active Session</h6>
+          <select id="sessionSelect" class="form-select form-select-sm mb-2"></select>
+          <div id="sessionInfo" class="muted small mb-2">Belum ada session aktif</div>
+          <div class="d-grid gap-2">
+            <button id="btnRequestQrMain" class="btn btn-outline-light btn-sm">Request QR</button>
+            <button id="btnRefreshSessions" class="btn btn-outline-secondary btn-sm">Refresh</button>
+            <button id="btnLogoutSession" class="btn btn-danger btn-sm">Logout Session</button>
+          </div>
+        </div>
+
+        <div class="card card-glass p-3">
+          <h6>Templates</h6>
+          <div id="templatesList" class="list-group mb-2"></div>
+          <button id="btnAddTemplate" class="btn btn-accent btn-sm w-100">Add Template</button>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="col-lg-9">
+        <div class="card card-glass p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-0">Kirim Pesan</h5>
+              <small class="muted">Kirim pesan teks atau broadcast</small>
+            </div>
+            <div id="waConnectionStatus" class="muted">Status: <span class="badge bg-secondary">unknown</span></div>
+          </div>
+
+          <form id="sendForm" class="row g-2 mt-3">
+            <div class="col-md-4">
+              <input id="toInput" class="form-control form-control-sm" placeholder="Nomor tujuan (628...)">
+            </div>
+            <div class="col-md-6">
+              <input id="messageInput" class="form-control form-control-sm" placeholder="Pesan..." />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+              <button id="btnSend" class="btn btn-accent btn-sm w-100">Send</button>
+              <button id="btnBroadcast" class="btn btn-outline-light btn-sm w-100" type="button">Broadcast</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-lg-6">
+            <div class="card card-glass p-3 h-100">
+              <h6>Inbox Realtime</h6>
+              <div id="inbox" class="list-group mt-2" style="max-height:56vh; overflow:auto;"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card card-glass p-3 h-100">
+              <h6>Activity Logs</h6>
+              <pre id="logs" class="muted" style="height:56vh; overflow:auto;"></pre>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Broadcast modal -->
+  <div class="modal fade" id="modalBroadcast" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content card-glass p-3">
+        <div class="modal-header border-0">
+          <h5 class="modal-title">Broadcast Message</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="muted">Masukkan nomor satu per baris atau dipisah koma.</p>
+          <textarea id="broadcastNumbers" class="form-control mb-2" rows="6" placeholder="62812...,62813..."></textarea>
+          <textarea id="broadcastMessage" class="form-control" rows="3" placeholder="Pesan broadcast..."></textarea>
+        </div>
+        <div class="modal-footer border-0">
+          <button class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+          <button id="btnDoBroadcast" class="btn btn-accent">Kirim Broadcast</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- libs -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <!-- page script -->
+  <script>
+    // API_KEY untuk REST image upload (jika gunakan). Ganti sesuai .env jika perlu.
+    const API_KEY = 4rc0d3'; // <-- ubah jika perlu (atau remove jika tidak pakai)
+  </script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
