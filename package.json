@@ -1,25 +1,26 @@
 {
-  "name": "wa-bot-backend",
+  "name": "whatsapp-dashboard-backend",
   "version": "1.0.0",
-  "description": "WhatsApp bot backend using Baileys, Express & Socket.IO",
-  "main": "server.js",
+  "description": "Backend untuk dasbor WhatsApp dengan multi-sesi menggunakan Baileys dan MySQL.",
+  "main": "main.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node main.js",
+    "dev": "nodemon main.js"
   },
-  "engines": { "node": ">=18" },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "baileys": "^4.0.0",
-    "express": "^4.18.2",
-    "socket.io": "^4.7.0",
-    "mysql2": "^3.3.0",
-    "qrcode": "^1.5.1",
+    "@whiskeysockets/baileys": "^6.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
-    "pino": "^8.12.0",
-    "dotenv": "^16.1.4",
-    "cors": "^2.8.5"
+    "mysql2": "^3.10.1",
+    "pino": "^9.2.0",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.3"
   }
 }
