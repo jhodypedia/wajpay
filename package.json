@@ -1,11 +1,11 @@
 {
   "name": "whatsapp-bot-baileys",
   "description": "WhatsApp Bot menggunakan Baileys, Express, Socket.IO",
-  "main": "server.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node srv/server.js",
-    "dev": "nodemon srv/server.js"
+    "start": "node srv/app.js",
+    "dev": "nodemon srv/app.js"
   },
   "dependencies": {
     "baileys": "",
